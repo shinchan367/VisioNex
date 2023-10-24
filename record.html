@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Screen Recording</title>
+</head>
+<body>
+    <button id="recordbtn">Start Recording</button>
+    
+    <video id="recordedVideo" controls controlslist="nodownload" style="display: none;"></video>
+
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+
+        const startButton = document.getElementById('recordbtn');
+        const videoElement = document.getElementById('recordedVideo');
+
+        startButton.addEventListener('click', startRecording);
+
+        async function startRecording() {
+            const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0) {
+                    recordedChunks.push(e.data);
+                }
+            };
+            
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+
+                videoElement.src = url;
+                videoElement.style.display = 'block';
+            };
+            
+            mediaRecorder.start();
+            startButton.disabled = true;
+        }
+    </script>
+</body>
+</html>

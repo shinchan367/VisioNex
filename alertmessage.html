@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  /* Style for the alert message */
+  #fullscreen-alert {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 24px;
+    text-align: center;
+    padding: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Button to toggle fullscreen -->
+<button onclick="toggleFullscreen()">Toggle Fullscreen</button>
+
+<!-- Fullscreen exit alert -->
+<div id="fullscreen-alert">
+  You have exited fullscreen mode.
+</div>
+
+<script>
+const fullscreenAlert = document.getElementById('fullscreen-alert');
+
+// Function to toggle fullscreen
+function toggleFullscreen() {
+  if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+    exitFullscreen();
+  } else {
+    enterFullscreen();
+  }
+}
+
+// Function to enter fullscreen
+function enterFullscreen() {
+  const element = document.documentElement;
+  if (element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element.mozRequestFullScreen) { // Firefox
+    element.mozRequestFullScreen();
+  } else if (element.webkitRequestFullscreen) { // Chrome, Safari and Opera
+    element.webkitRequestFullscreen();
+  } else if (element.msRequestFullscreen) { // IE/Edge
+    element.msRequestFullscreen();
+  }
+}
+
+// Function to exit fullscreen
+function exitFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.mozCancelFullScreen) {
+    document.mozCancelFullScreen();
+  } else if (document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) {
+    document.msExitFullscreen();
+  }
+}
+
+// Event listener to handle fullscreen change
+document.addEventListener("fullscreenchange", fullscreenChangeHandler);
+document.addEventListener("webkitfullscreenchange", fullscreenChangeHandler);
+document.addEventListener("mozfullscreenchange", fullscreenChangeHandler);
+document.addEventListener("MSFullscreenChange", fullscreenChangeHandler);
+
+function fullscreenChangeHandler() {
+  if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+    fullscreenAlert.style.display = 'block';
+    setTimeout(() => {
+      fullscreenAlert.style.display = 'none';
+    }, 2000); // Display the alert for 2 seconds
+  }
+}
+</script>
+
+</body>
+</html>

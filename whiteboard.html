@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta rel ="viewpoint"content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"  href="styleswhite.css">
+        <title>WhiteBoard</title>
+    </head>
+    <body>
+        <div>White Board</div>
+        <canvas id="canvas" width="1100" height="530"></canvas>
+        <script>
+           
+           var canvas=document.getElementById('canvas');
+           var context=canvas.getContext('2d');
+           var isDrawing=false;
+           var currentX=0;
+           var currentY=0;
+           canvas.addEventListener('mousedown',function(e){
+            isDrawing=true;
+            currentX=e.clientX-canvas.offsetLeft;
+            currentY=e.clientY-canvas.offsetTop;
+           });
+           canvas.addEventListener('mousemove',function(e){
+            if(isDrawing===true){
+                draw(currentX,currentY,e.clientX-canvas.offsetLeft,e.clientY-canvas.offsetTop);
+                currentX=e.clientX-canvas.offsetLeft;
+                currentY=e.clientY-canvas.offsetTop;
+
+            }
+           });
+           function draw(x1,y1,x2,y2){
+            context.beginPath();
+            context.strokeStyle='black';
+            context.lineWidth=3.5;
+            context.moveTo(x1,y1);
+            context.lineTo(x2,y2);
+            context.stroke();
+            context.closePath();
+           }
+        </script>
+        <script src="js\whiteboard.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+
+        <script>
+            const socket = io(); // Connect to the default server
+        
+        const querystring = window.location.search;
+        console.log('Query string:', querystring);
+
+        const urlParams = new URLSearchParams(querystring);
+        const room = urlParams.get("room");
+        const roomId = room;
+
+        socket.emit('create', roomId);
+
+        socket.on("connect", () => {
+            console.log('Connected to the server');
+        });
+
+        // Listen for other events from the server
+        socket.on('customEvent', (data) => {
+            console.log('Received customEvent from the server:', data);
+        });
+
+            <script type="text/javascript"  src="js\whiteboard_rtc.js"/>
+    
+            
+        </script>
+        <div><button type="button" onclick="location.reload();" class="btn">Erase  </button>
+        </div>
+    </body>
+</html>
